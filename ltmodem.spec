@@ -128,12 +128,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n kernel-char-ltmodem
 %defattr(644,root,root,755)
-%attr(600,root,root) /lib/modules/%{_kernel_ver}/*/*
 %doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
+/lib/modules/%{_kernel_ver}/*/*
 
 %if 0
 %files -n kernel-smp-char-ltmodem
 %defattr(644,root,root,755)
-%attr(600,root,root) /lib/modules/%{_kernel_ver}smp/*/*
 %doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
+/lib/modules/%{_kernel_ver}smp/*/*
 %endif
