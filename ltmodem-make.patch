@@ -1,39 +1,92 @@
-diff -Nur ltmodem-5.78e.orig/Makefile ltmodem-5.78e/Makefile
---- ltmodem-5.78e.orig/Makefile	Mon Feb 12 06:18:33 2001
-+++ ltmodem-5.78e/Makefile	Sun Mar 18 14:39:39 2001
-@@ -19,25 +19,8 @@
+diff -Nur ltmodem-5.99b.orig/source/Makefile.in ltmodem-5.99b/source/Makefile.in
+--- ltmodem-5.99b.orig/source/Makefile.in	Fri May 18 20:54:06 2001
++++ ltmodem-5.99b/source/Makefile.in	Mon May 21 22:49:13 2001
+@@ -9,9 +9,9 @@
+ LT_PROPRIETARY_MODULE = @LT_PROPRIETARY_MODULE@.o
  
- SYSTEM = /usr/src/linux/
- 
--KCFLAGS = -D__KERNEL__ -I$(SYSTEM)include \
--	-Wall -Wstrict-prototypes -O2 \
--	-fomit-frame-pointer -fno-strict-aliasing -pipe \
+ KCFLAGS = -D__KERNEL__ -I@KERNEL_SOURCE_TREE@/include \
+-	-Wall -Wstrict-prototypes -O3 \
++	-Wall -Wstrict-prototypes \
+ 	-fomit-frame-pointer -fno-strict-aliasing -pipe \
 -	-fno-strength-reduce -m486 -malign-loops=2 \
--	-malign-jumps=2 -malign-functions=2 -DCPU=586 \
--	-DMODULE \
--	-DLT_VERSION=$(LT_VERSION)
++	@CFLAGS@ -malign-loops=2 \
+ 	-malign-jumps=2 -malign-functions=2 -DCPU=586 \
+ 	-DMODULE -DLT_VERSION=$(LT_VERSION) -DLINUX \
+ 	-DNO_EEPROM -DLT_SERIAL_MODULE=@LT_SERIAL_MODULE@
+diff -Nur ltmodem-5.99b.orig/source/configure.in ltmodem-5.99b/source/configure.in
+--- ltmodem-5.99b.orig/source/configure.in	Fri May 18 20:54:06 2001
++++ ltmodem-5.99b/source/configure.in	Mon May 21 22:50:59 2001
+@@ -4,7 +4,7 @@
+ 
+ AC_INIT(ltmodem.c)
+ 
+-source SETTINGS
++. ./SETTINGS
+ if test $? -ne 0
+ then
+   echo "ERROR: SETTINGS file not found - aborting"
+@@ -27,64 +27,6 @@
+ then
+   echo "ERROR: This driver will only work on iX86 machines"
+   exit 1
+-fi
 -
--KCFLAGS3 = $(KCFLAGS) \
--	-DMODVERSIONS \
--	-include $(SYSTEM)include/linux/modversions.h
+-echo "Scanning PCI bus for modem"
+-LSPCI_PATH="/bin /sbin"
+-for i in $LSPCI_PATH
+-do
+-  if test -x $i/lspci
+-  then
+-    LSPCI=$i/lspci
+-  fi
+-done
+-if test -z $LSPCI
+-then
+-  echo "+-----------------------------------------------------------------------------+"
+-  echo "| WARNING: lspci not found or not executable - not checking for modem         |"
+-  echo "+-----------------------------------------------------------------------------+"
+-else
+-  echo "  ... using $LSPCI"
 -
+-  FOUND="no"
 -
--#CC=gcc -D__KERNEL__ -DMODULE -w -O2 -fomit-frame-pointer 
--#CC=gcc $(KCFLAGS2) -D__KERNEL__ -DMODULE -w -O2 -fomit-frame-pointer -I$(SYSTEM)include
--CC = gcc $(KCFLAGS) $(KCFLAGS_EXTRA)
--#CC = gcc $(KCFLAGS_EXTRA) $(KCFLAGS) 
-+KCFLAGS = -D__KERNEL__ -DMODULE -DLT_VERSION=$(LT_VERSION) -malign-loops=2 -malign-functions=2
+-  DEVICES="0x11c1:0x0440-0x045c"
+-  DEVICES=$DEVICES" 0x115d:0x0000-0x000f"
+-  DEVICES=$DEVICES" 0x115d:0x0440-0x045c"
+-  DEVICES=$DEVICES" 0x115d:0x0010-0x03ff"
+-
+-  if ! $LSPCI >/dev/null 2>/dev/null
+-  then
+-    echo "WARNING: $LSPCI returned error - not checking for modem"
+-  else
+-    for PCIDEV in `$LSPCI -n | cut -d' ' -f4`
+-    do
+-      DEVVEN=$(( 0x`echo $PCIDEV | cut -d':' -f1` + 0 ))
+-      DEVNUM=$(( 0x`echo $PCIDEV | cut -d':' -f2` + 0 ))
+-      for DEV in $DEVICES
+-      do
+-        VENDOR=$(( `echo $DEV | cut -d':' -f1` + 0 ))
+-        DEVMIN=$(( `echo $DEV | cut -d':' -f2 | cut -d'-' -f1` + 0 ))
+-        DEVMAX=$(( `echo $DEV | cut -d':' -f2 | cut -d'-' -f2` + 0 ))
+-
+-        if test $DEVVEN -eq $VENDOR && test $DEVNUM -ge $DEVMIN && test $DEVNUM -le $DEVMAX
+-        then
+-          FOUND="yes"
+-          echo "Modem found: $PCIDEV"
+-          MODEM_VENDOR=0x`echo $PCIDEV | cut -d':' -f1`
+-          MODEM_DEVICE=0x`echo $PCIDEV | cut -d':' -f2`
+-        fi
+-      done
+-    done
+-
+-    if test ! $FOUND = "yes"
+-    then
+-      echo "+----------------------------------------------------------------------------+" 
+-      echo "| WARNING: If your modem is a PCI modem it will probably                     |" 
+-      echo "|             not work with this driver pair.                                |"
+-      echo "+----------------------------------------------------------------------------+"  
+-    fi
+-  fi
+ fi
  
--KVERSION := $(shell uname -r)
- KMODE := $(findstring 2.4, $(KVERSION))
- ifeq ($(KMODE),)
- KMODE := $(findstring 2.2, $(KVERSION))
-@@ -103,7 +86,7 @@
- 	./ltinst
- 
- %.a: %.c
--	$(CC) -c -o $@ $<
-+	$(CC) $(KCFLAGS) $(CFLAGS) -c -o $@ $<
- 
- 
- clean::
+ GCC="yes"
