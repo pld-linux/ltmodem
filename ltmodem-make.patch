@@ -13,3 +13,14 @@ diff -Nur ltmodem-5.99b.orig/source/Makefile.in ltmodem-5.99b/source/Makefile.in
  	-malign-jumps=2 -malign-functions=2 -DCPU=586 \
  	-DMODULE -DLT_VERSION=$(LT_VERSION) -DLINUX \
  	-DNO_EEPROM -DLT_SERIAL_MODULE=@LT_SERIAL_MODULE@
+--- ltmodem-6.00c1/source/configure.in.orig	Sun Apr 14 13:35:55 2002
++++ ltmodem-6.00c1/source/configure.in	Sun Apr 14 13:36:36 2002
+@@ -110,7 +110,6 @@
+ 
+ echo "Checking kernel header version"
+ KVERSION="conftest.kversion"
+-CFLAGS="-I$KERNEL_SOURCE_TREE/include"
+ AC_TRY_RUN(
+ #include "$KERNEL_SOURCE_TREE/include/linux/autoconf.h"
+ #include "$KERNEL_SOURCE_TREE/include/linux/config.h"
+
