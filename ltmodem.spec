@@ -6,7 +6,7 @@ Version:	6.00c2
 Release:	1.1
 License:	GPL
 Group:		Base/Kernel
-URL:		http://www.heby.de/ltmodem/
+URL:		http://www.physcip.uni-stuttgart.de/heby/ltmodem/
 Source0:	http://www.physcip.uni-stuttgart.de/heby/ltmodem/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
