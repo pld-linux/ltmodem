@@ -1,3 +1,5 @@
+%define			_kernel_ver %(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
@@ -17,7 +19,7 @@ BuildConflicts:	kernel < 2.3.0
 Prereq:		modutils >= 2.4.6-3
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
-%conflicts_kernel_ver
+Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
 BuildConflicts:	kernel-headers < 2.4.0
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
