@@ -1,3 +1,7 @@
+#
+# Conditional build:
+# _without_dist_kernel	- without kernel from distribution
+#
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
@@ -114,17 +118,17 @@ rm -rf DOCs/Installers
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -n kernel-char-ltmodem
-/sbin/depmod -a
+%post	-n kernel-char-ltmodem
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
 %postun	-n kernel-char-ltmodem
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
-%post -n kernel-smp-char-ltmodem
-/sbin/depmod -a
+%post	-n kernel-smp-char-ltmodem
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
 %postun	-n kernel-smp-char-ltmodem
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver}smp %{_kernel_ver}smp
 
 %files -n kernel-char-ltmodem
 %defattr(644,root,root,755)
