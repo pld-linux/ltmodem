@@ -3,14 +3,14 @@
 %define		smpstr	%{?_with_smp:-smp}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 
-%define 	inner_ver 6.00a1
+%define 	inner_ver 6.00b14
 
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	6.00a
-Release:	2
+Version:	%{inner_ver}
+Release:	1
 License:	GPL
 Group:		Base/Kernel
 URL:		http://www.heby.de/ltmodem/
