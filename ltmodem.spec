@@ -6,12 +6,12 @@ Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	6.00c2
-Release:	1.2
+Version:	8.26a9
+Release:	0.1
 License:	GPL
 Group:		Base/Kernel
 Source0:	http://www.physcip.uni-stuttgart.de/heby/ltmodem/%{name}-%{version}.tar.gz
-# Source0-md5:	3fc72b13c3af49e88b1d28a25aaef22b
+# Source0-md5:	a75ae27d40ade3aa698c0b0b290724f4
 Patch0:		%{name}-make.patch
 URL:		http://www.physcip.uni-stuttgart.de/heby/ltmodem/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
