@@ -1,20 +1,20 @@
+%define ver_major 5
+%define ver_minor 78
+
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	568
+Version:	%{ver_major}.%{ver_minor}
 Release:	1
-Copyright:	Free
+License:	GPL
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
-Source0:	http://www.linmodems.org/linux%{version}.zip
-Source1:	http://www.test.dclabs.com.au/linmodem/fixscript
-Patch0:		%{name}-kernver.patch
+Source0:	http://walbran.org/sean/linux/stodolsk/i56lvp%{ver_major}%{ver_minor}.zip
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	unzip
 Prereq:		modutils >= 2.3.18-2
-Requires:	kernel >= 2.2.17-6
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
 
@@ -35,11 +35,11 @@ Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyS14.
 %prep
 %setup -qcT
 unzip %{SOURCE0}
-install -m700 %{SOURCE1} .
-%patch -p1
 
 %build
-KV=%{_kernel_ver} ./fixscript ltmodem.o lt.o
+# forget the Makefile. It sucks.
+gcc -D__KERNEL__ -DMODULE $RPM_OPT_FLAGS -c *.c
+ld -r -o lt.o *.o
 
 %install
 rm -rf $RPM_BUILD_ROOT
