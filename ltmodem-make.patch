@@ -1,21 +1,6 @@
-diff -Nur ltmodem-5.99b.orig/source/Makefile.in ltmodem-5.99b/source/Makefile.in
---- ltmodem-5.99b.orig/source/Makefile.in	Fri May 18 20:54:06 2001
-+++ ltmodem-5.99b/source/Makefile.in	Mon May 21 22:49:13 2001
-@@ -9,9 +9,9 @@
- LT_PROPRIETARY_MODULE = @LT_PROPRIETARY_MODULE@.o
- 
- KCFLAGS = -D__KERNEL__ -I@KERNEL_SOURCE_TREE@/include \
--	-Wall -Wstrict-prototypes -O3 \
-+	-Wall -Wstrict-prototypes \
- 	-fomit-frame-pointer -fno-strict-aliasing -pipe \
--	-fno-strength-reduce -m486 -malign-loops=2 \
-+	@CFLAGS@ -malign-loops=2 \
- 	-malign-jumps=2 -malign-functions=2 -DCPU=586 \
- 	-DMODULE -DLT_VERSION=$(LT_VERSION) -DLINUX \
- 	-DNO_EEPROM -DLT_SERIAL_MODULE=@LT_SERIAL_MODULE@
---- ltmodem-6.00c1/source/configure.in.orig	Sun Apr 14 13:35:55 2002
-+++ ltmodem-6.00c1/source/configure.in	Sun Apr 14 13:36:36 2002
-@@ -110,7 +110,6 @@
+--- ltmodem-8.26a9/source/configure.in	2002-11-25 03:09:39.000000000 +0100
++++ ltmodem-8.26a9.pius/source/configure.in	2003-09-18 17:30:57.000000000 +0200
+@@ -134,7 +134,6 @@
  
  echo "Checking kernel header version"
  KVERSION="conftest.kversion"
@@ -23,4 +8,26 @@ diff -Nur ltmodem-5.99b.orig/source/Makefile.in ltmodem-5.99b/source/Makefile.in
  AC_TRY_RUN(
  #include "$KERNEL_SOURCE_TREE/include/linux/autoconf.h"
  #include "$KERNEL_SOURCE_TREE/include/linux/config.h"
-
+--- ltmodem-8.26a9/source/Makefile.in	2002-11-18 17:04:10.000000000 +0100
++++ ltmodem-8.26a9.pius/source/Makefile.in	2003-09-18 17:30:07.000000000 +0200
+@@ -14,7 +14,7 @@
+ 
+ ifeq ($(GCCVERSION),3)
+ KCFLAGS = -D__KERNEL__ -I@KERNEL_SOURCE_TREE@/include \
+-        -Wall -Wstrict-prototypes -O3 \
++        -Wall -Wstrict-prototypes -O3 \
+         -fomit-frame-pointer -fno-strict-aliasing -pipe \
+         -fno-strength-reduce \
+         -DMODULE -DLT_VERSION=$(LT_VERSION) -DLINUX \
+@@ -22,9 +22,9 @@
+         -DLT_SERIAL_MODULE=$(subst lt_,lt$(LTNUMBER)_,@LT_SERIAL_MODULE@)
+ else
+ KCFLAGS = -D__KERNEL__ -I@KERNEL_SOURCE_TREE@/include \
+-        -Wall -Wstrict-prototypes -O3 \
++        -Wall -Wstrict-prototypes -O3 \
+         -fomit-frame-pointer -fno-strict-aliasing -pipe \
+-        -fno-strength-reduce -m486 -malign-loops=2 \
++        -fno-strength-reduce -malign-loops=2 \
+         -malign-jumps=2 -malign-functions=2 -DCPU=586 \
+         -DMODULE -DLT_VERSION=$(LT_VERSION) -DLINUX \
+         -DNO_EEPROM \
