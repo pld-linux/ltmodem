@@ -1,22 +1,25 @@
 #
 # Conditional build:
-# _without_dist_kernel	- without kernel from distribution
-#
+%bcond_without	dist_kernel	# without kernel from distribution
+%bcond_without	smp		# build the SMP driver
+
+%define		_rel	1
+
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	8.26a9
-Release:	0.1
-License:	GPL
+Version:	8.31a9
+Release:	%{_rel}
+License:	unknown
 Group:		Base/Kernel
-Source0:	http://www.physcip.uni-stuttgart.de/heby/ltmodem/%{name}-%{version}.tar.gz
-# Source0-md5:	a75ae27d40ade3aa698c0b0b290724f4
-Patch0:		%{name}-make.patch
-URL:		http://www.physcip.uni-stuttgart.de/heby/ltmodem/
+Source0:	http://linmodems.technion.ac.il/packages/ltmodem/archive/source/%{name}-%{version}.tar.gz
+# NoSource0-md5:	bd0e54ddb2c7037b644b9c6cb6bce9ea
+NoSource:	0
+URL:		http://linmodems.technion.ac.il/Ltmodem.html
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	autoconf
-%{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.3.0}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.3.0}
 BuildRequires:	rpmbuild(macros) >= 1.118
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
@@ -37,9 +40,9 @@ Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
-Release:	%{release}@%{_kernel_ver_str}
+Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	modutils >= 2.4.6-3
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
@@ -62,9 +65,9 @@ Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
-Release:	%{release}@%{_kernel_ver_str}
+Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	modutils >= 2.4.6-3
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
@@ -86,7 +89,6 @@ Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 %prep
 %setup -q
 tar xzf source.tar.gz
-%patch0 -p1
 
 %build
 cd source
@@ -96,23 +98,25 @@ CFLAGS="%{rpmcflags} -I%{_kernelsrcdir}/include"
 %configure \
 	--with-force=yes \
 	--with-kernel=%{_kernelsrcdir}
-%{__make}
-mv lt_*.o lt*.a ..
-
-%if 0
-CFLAGS="$CFLAGS -D__KERNEL_SMP=1"
-%configure \
-	--with-force=yes \
-	--with-kernel=%{_kernelsrcdir}
-%{__make}
-%endif
+for cfg in up %{?with_smp:smp}; do
+	rm -rf include
+	install -d include/{linux,config}
+	ln -sf %{_kernelsrcdir}/config-$cfg .config
+	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
+	touch include/config/MARKER
+	%{__make} -C %{_kernelsrcdir} modules \
+		CC="%{__cc}" CPP="%{__cpp}" \
+		M=$PWD O=$PWD V=1
+	mkdir $cfg
+	mv lt_*.o *.ko $cfg
+done
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -dD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
-cp -f lt_*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
-%if 0
-cp -f source/lt_*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
+install source/up/*.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+%if %{with smp}
+install source/smp/*.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
 %endif
 
 rm -rf DOCs/Installers
@@ -137,7 +141,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 /lib/modules/%{_kernel_ver}/*/*
 
-%if 0
+%if %{with smp}
 %files -n kernel-smp-char-ltmodem
 %defattr(644,root,root,755)
 %doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
