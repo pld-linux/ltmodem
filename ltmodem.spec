@@ -6,9 +6,9 @@ Version:	6.00c2
 Release:	1.2
 License:	GPL
 Group:		Base/Kernel
-URL:		http://www.physcip.uni-stuttgart.de/heby/ltmodem/
 Source0:	http://www.physcip.uni-stuttgart.de/heby/ltmodem/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
+URL:		http://www.physcip.uni-stuttgart.de/heby/ltmodem/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	autoconf
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.3.0}
@@ -33,11 +33,12 @@ Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Release:	%{release}@%{_kernel_ver_str}
 Group:		Base/Kernel
+%{!?_without_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	modutils >= 2.4.6-3
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
 Obsoletes:	ltmodem
+Obsoletes:	kernel-net-ltmodem
 
 %description -n kernel-char-ltmodem
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
@@ -57,11 +58,12 @@ Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Release:	%{release}@%{_kernel_ver_str}
 Group:		Base/Kernel
+%{!?_without_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	modutils >= 2.4.6-3
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
 Obsoletes:	ltmodem
+Obsoletes:	kernel-smp-net-ltmodem
 
 %description -n kernel-smp-char-ltmodem
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
