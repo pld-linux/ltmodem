@@ -1,17 +1,15 @@
-%define ver_major 5
-%define ver_minor 78
-
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	%{ver_major}.%{ver_minor}
+Version:	5.78e
 Release:	1
 License:	GPL
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
-Source0:	http://walbran.org/sean/linux/stodolsk/i56lvp%{ver_major}%{ver_minor}.zip
+Source0:	http://www.tux.org/pub/dclug/marvin/%{name}-%{version}.tar.gz
+Patch0:		%{name}-make.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	unzip
 Prereq:		modutils >= 2.3.18-2
@@ -33,24 +31,28 @@ ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
 Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyS14.
 
 %prep
-%setup -qcT
-unzip %{SOURCE0}
+%setup -q
+tar -xzC.. -f %{name}-%{version}.tar.gz
+%patch0 -p1
 
 %build
-# forget the Makefile. It sucks.
-gcc -D__KERNEL__ -DMODULE $RPM_OPT_FLAGS -c *.c
-ld -r -o lt.o *.o
+CFLAGS="${CFLAGS:-%optflags}%{?debug: -g -O0}" \
+CC=gcc KVERSION=%{_kernel_ver} make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -D lt.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ltmodem.o
+install -D ltmodem.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/ltmodem.o
 install -d $RPM_BUILD_ROOT/dev
-mknod $RPM_BUILD_ROOT/dev/ttyS14 c 62 78
+mknod $RPM_BUILD_ROOT/dev/ttyLT0 c 62 64
+gzip -9nf [CU1]*
 
 %files
 %defattr(644,root,root,755)
 %attr(664,root,ttyS) /dev/*
 %attr(600,root,root) /lib/modules/*/*/*
+%doc C*
+%doc U*
+%doc 1*
 
 %post
 depmod -a
