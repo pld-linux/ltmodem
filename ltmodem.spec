@@ -1,5 +1,6 @@
 %define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
-%define		smpstr	%{?_with_smp:smp}%{!?_with_smp:up}
+%define		_kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
+%define		smpstr	%{?_with_smp:-smp}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 
 %define 	inner_ver 6.00a1
@@ -7,16 +8,16 @@
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
-Name:		ltmodem
+Name:		kernel%{smpstr}-net-ltmodem
 Version:	6.00a
-Release:	2@%{_kernel_ver}%{smpstr}
+Release:	2@%{_kernel_ver_str}
 License:	GPL
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
 URL:		http://www.heby.de/ltmodem/
-Source0:	http://www.physcip.uni-stuttgart.de/heby/%{name}/%{name}-%{version}.tar.gz
-Patch0:		%{name}-make.patch
+Source0:	http://www.physcip.uni-stuttgart.de/heby/ltmodem/ltmodem-%{version}.tar.gz
+Patch0:		ltmodem-make.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	autoconf
 Prereq:		modutils >= 2.4.6-3
@@ -24,6 +25,7 @@ Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
 Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+Obsoletes:	ltmodem
 BuildConflicts:	kernel-headers < 2.3.0
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
@@ -41,7 +43,7 @@ ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
 Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 
 %prep
-%setup -q -n %{name}-%{inner_ver}
+%setup -q -n ltmodem-%{inner_ver}
 tar xzf source.tar.gz
 %patch0 -p1
 
