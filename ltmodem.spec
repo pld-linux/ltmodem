@@ -6,18 +6,20 @@ Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	6.00c2
-Release:	1.2
+Version:	8.26a9
+Release:	0.9
 License:	GPL
 Group:		Base/Kernel
 Source0:	http://www.physcip.uni-stuttgart.de/heby/ltmodem/%{name}-%{version}.tar.gz
-# Source0-md5:	3fc72b13c3af49e88b1d28a25aaef22b
-Patch0:		%{name}-make.patch
+# Source0-md5:	a75ae27d40ade3aa698c0b0b290724f4
+# Patch0:		%{name}-make.patch
 URL:		http://www.physcip.uni-stuttgart.de/heby/ltmodem/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	autoconf
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.3.0}
-BuildRequires:	rpmbuild(macros) >= 1.118
+Requires:	rpm >= 4.0.2-118
+Requires:       kernel >= 2.4
+# BuildRequires:	rpmbuild(macros) >= 1.118
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
 
@@ -86,7 +88,7 @@ Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 %prep
 %setup -q
 tar xzf source.tar.gz
-%patch0 -p1
+#% %patch0 -p1
 
 %build
 cd source
