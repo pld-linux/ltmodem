@@ -3,7 +3,7 @@ Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
 Version:	6.00c2
-Release:	1.1
+Release:	1.2
 License:	GPL
 Group:		Base/Kernel
 URL:		http://www.physcip.uni-stuttgart.de/heby/ltmodem/
@@ -27,7 +27,7 @@ Modems. Diese Modems werden als das /dev/ttyLT0-Gerät gewährt.
 ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
 Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 
-%package -n kernel-net-ltmodem
+%package -n kernel-char-ltmodem
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
@@ -39,19 +39,19 @@ Conflicts:	ppp < 2.4.0
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
 Obsoletes:	ltmodem
 
-%description -n kernel-net-ltmodem
+%description -n kernel-char-ltmodem
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
 modems are made available as the /dev/ttyLT0 device.
 
-%description -n kernel-net-ltmodem -l de
+%description -n kernel-char-ltmodem -l de
 ltmodem ist ein Kernmodul, der unterstützt Lucent-Chip-basierte
 Modems. Diese Modems werden als das /dev/ttyLT0-Gerät gewährt.
 
-%description -n kernel-net-ltmodem -l pl
+%description -n kernel-char-ltmodem -l pl
 ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
 Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 
-%package -n kernel-smp-net-ltmodem
+%package -n kernel-smp-char-ltmodem
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
@@ -63,15 +63,15 @@ Conflicts:	ppp < 2.4.0
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
 Obsoletes:	ltmodem
 
-%description -n kernel-smp-net-ltmodem
+%description -n kernel-smp-char-ltmodem
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
 modems are made available as the /dev/ttyLT0 device.
 
-%description -n kernel-smp-net-ltmodem -l de
+%description -n kernel-smp-char-ltmodem -l de
 ltmodem ist ein Kernmodul, der unterstützt Lucent-Chip-basierte
 Modems. Diese Modems werden als das /dev/ttyLT0-Gerät gewährt.
 
-%description -n kernel-smp-net-ltmodem -l pl
+%description -n kernel-smp-char-ltmodem -l pl
 ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
 Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 
@@ -112,25 +112,25 @@ rm -rf DOCs/Installers
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -n kernel-net-ltmodem
+%post -n kernel-char-ltmodem
 /sbin/depmod -a
 
-%postun	-n kernel-net-ltmodem
+%postun	-n kernel-char-ltmodem
 /sbin/depmod -a
 
-%post -n kernel-smp-net-ltmodem
+%post -n kernel-smp-char-ltmodem
 /sbin/depmod -a
 
-%postun	-n kernel-smp-net-ltmodem
+%postun	-n kernel-smp-char-ltmodem
 /sbin/depmod -a
 
-%files -n kernel-net-ltmodem
+%files -n kernel-char-ltmodem
 %defattr(644,root,root,755)
 %attr(600,root,root) /lib/modules/%{_kernel_ver}/*/*
 %doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 
 %if 0
-%files -n kernel-smp-net-ltmodem
+%files -n kernel-smp-char-ltmodem
 %defattr(644,root,root,755)
 %attr(600,root,root) /lib/modules/%{_kernel_ver}smp/*/*
 %doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
