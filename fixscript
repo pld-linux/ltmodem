@@ -1,0 +1,84 @@
+#! /bin/bash
+# To make this file executable:  chmod +x fixscript
+# This is a very slight edit of the ltfixscript contributed to
+# the Linmodems Newslist 
+#  From - Sun Jul 23 04:27:38 2000
+#  From: "Mark Spieth" <mark at  digivation.com.au>
+#  To: <discuss@linmodems.org>
+#  Subject: ltmodem symbols and version fixed
+#  Date: Sun, 23 Jul 2000 12:39:44 +1000
+#  Organization: Digivation Pty Ltd
+
+echo "Fixscript V1.7"
+
+if [ -z "$1" -o -z "$2" ]; then
+cat <<END
+This script changes version number tags of binary
+kernel modules to match the version of the currently
+running kernel. It also renames any symbol that the
+current kernel can't resolve into their equivalent
+resolvable symbols.
+
+For inserting binary modules into kernels, the 'fixed' 
+module can be inserted with:
+	insmod module
+which is used in automated kernel module management,
+rather than forcing module loading with:
+	insmod -f module
+which is necessary when kernel and module versions
+are not matched.
+
+WARNING! This change is purely cosmetic, and the use
+of version matched binaries whenever possible is
+strongly advised. It may crash your kernel due to
+inconsistencies in data structures between the kernel
+as it stands and the headers used to originally compile
+the module being fixed. No guarantees are given or implied
+under any circumstances.
+
+GNU objcopy version 2.9.5 or later is required;
+this is provided as part of the 'binary utilities'
+packages such as the Debian binutils.deb
+
+USAGE: fixscript input-file output-file
+END
+exit 1
+fi
+
+MI=/tmp/modinfo
+
+[ -z "$DEPMOD" ] && DEPMOD=depmod
+
+#new kernel version modinfo section
+echo -ne "kernel_version="`uname -r`"\0" > $MI
+
+#build the objcopy command
+CMD="objcopy"
+for i in `$DEPMOD -e $1 2>&1 | sed 's/depmod://g' | grep -vE "^$1:|Unresolved symbols|^#"` ; do
+ echo -n doing $i
+ i1=`echo $i | awk '{ 
+  gsub(/_R[0-9a-fA-F]+/,""); 
+  printf("%s", $1); 
+ }'`
+ echo -n " trunc=$i1"
+ new=`awk '/ '$i1'_R/ {
+  printf("%s", $2);
+ }' < /proc/ksyms`
+ echo " new=$new"
+ CMD="$CMD --redefine-sym=$i=$new"
+done
+
+#fix symbols which conflict with the serial driver
+CMD="$CMD --redefine-sym=register_serial=register_lucent"
+CMD="$CMD --redefine-sym=unregister_serial=unregister_lucent"
+CMD="$CMD --redefine-sym=serial_console_init=ltmodem_console_init"
+
+#replace the modinfo section with the new one
+CMD="$CMD --remove-section=.modinfo --add-section=.modinfo=$MI"
+CMD="$CMD $*"
+
+#run the command
+$CMD
+
+#remove the section file
+rm -f $MI
