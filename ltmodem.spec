@@ -84,23 +84,28 @@ tar xzf source.tar.gz
 cd source
 autoconf
 
+CFLAGS="%{rpmcflags} -I%{_kernelsrcdir}/include"
 %configure \
 	--with-force=yes \
 	--with-kernel=%{_kernelsrcdir}
 %{__make}
 mv lt_*.o lt*.a ..
 
-CFLAGS="%{rpmcflags} -D__KERNEL_SMP=1"
+%if 0
+CFLAGS="$CFLAGS -D__KERNEL_SMP=1"
 %configure \
 	--with-force=yes \
 	--with-kernel=%{_kernelsrcdir}
 %{__make}
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -dD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
 cp -f lt_*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+%if 0
 cp -f source/lt_*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
+%endif
 
 rm -rf DOCs/Installers
 gzip -9nf 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
@@ -125,7 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(600,root,root) /lib/modules/%{_kernel_ver}/*/*
 %doc 1ST-READ* DOCs/* source/*.gz
 
+%if 0
 %files -n kernel-smp-net-ltmodem
 %defattr(644,root,root,755)
 %attr(600,root,root) /lib/modules/%{_kernel_ver}smp/*/*
 %doc 1ST-READ* DOCs/* source/*.gz
+%endif
