@@ -41,15 +41,16 @@ tar xzf source.tar.gz
 %build
 cd source
 autoconf
-%configure --with-force=yes --with-kernel=/usr/src/linux
+%configure \
+	--with-force=yes \
+	--with-kernel=/usr/src/linux
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-cd source
-install -dD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/
-install -m600 lt_*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/
-cd ..
+
+install -D source/lt_*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/
+
 gzip -9nf 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 
 %files
