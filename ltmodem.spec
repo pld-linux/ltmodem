@@ -108,7 +108,6 @@ cp -f source/lt_*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
 %endif
 
 rm -rf DOCs/Installers
-gzip -9nf 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -128,11 +127,11 @@ rm -rf $RPM_BUILD_ROOT
 %files -n kernel-net-ltmodem
 %defattr(644,root,root,755)
 %attr(600,root,root) /lib/modules/%{_kernel_ver}/*/*
-%doc 1ST-READ* DOCs/* source/*.gz
+%doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 
 %if 0
 %files -n kernel-smp-net-ltmodem
 %defattr(644,root,root,755)
 %attr(600,root,root) /lib/modules/%{_kernel_ver}smp/*/*
-%doc 1ST-READ* DOCs/* source/*.gz
+%doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 %endif
