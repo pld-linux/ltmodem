@@ -1,4 +1,4 @@
-%define		_kernel_ver %(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		_kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		smpstr	%{?_with_smp:smp}%{!?_with_smp:up}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 
@@ -17,13 +17,12 @@ Source0:	http://www.tux.org/pub/dclug/marvin/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	autoconf
-BuildConflicts:	kernel < 2.3.0
 Prereq:		modutils >= 2.4.6-3
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
 Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
-BuildConflicts:	kernel-headers < 2.4.0
+BuildConflicts:	kernel-headers < 2.3.0
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
 
@@ -52,7 +51,7 @@ CFLAGS="%{rpmcflags} -D__KERNEL_SMP=1"
 %endif
 %configure \
 	--with-force=yes \
-	--with-kernel=/usr/src/linux
+	--with-kernel=%{_kernelsrcdir}
 %{__make}
 
 %install
