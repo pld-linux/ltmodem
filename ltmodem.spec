@@ -13,6 +13,7 @@ Patch0:		%{name}-make.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	unzip
 Prereq:		modutils >= 2.3.18-2
+Requires:	dev >= 2.7.7-9
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
 
@@ -42,13 +43,10 @@ CC=gcc KVERSION=%{_kernel_ver} make
 %install
 rm -rf $RPM_BUILD_ROOT
 install -D ltmodem.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/ltmodem.o
-install -d $RPM_BUILD_ROOT/dev
-mknod $RPM_BUILD_ROOT/dev/ttyLT0 c 62 64
 gzip -9nf [CU1]*
 
 %files
 %defattr(644,root,root,755)
-%attr(664,root,ttyS) /dev/*
 %attr(600,root,root) /lib/modules/*/*/*
 %doc C*
 %doc U*
