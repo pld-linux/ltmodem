@@ -2,18 +2,20 @@
 %define		smpstr	%{?_with_smp:smp}%{!?_with_smp:up}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 
+%define 	inner_ver 6.00a1
+
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	5.99b
+Version:	6.00a
 Release:	2@%{_kernel_ver}%{smpstr}
 License:	GPL
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
 Group(pl):	Podstawowe/J±dro
 URL:		http://www.heby.de/ltmodem/
-Source0:	http://www.tux.org/pub/dclug/marvin/%{name}-%{version}.tar.gz
+Source0:	http://www.physcip.uni-stuttgart.de/heby/%{name}/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	autoconf
@@ -39,7 +41,7 @@ ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
 Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{inner_ver}
 tar xzf source.tar.gz
 %patch0 -p1
 
