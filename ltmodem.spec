@@ -18,7 +18,7 @@ Source0:	http://www.physcip.uni-stuttgart.de/heby/ltmodem/%{name}-%{version}.tar
 Patch0:		%{name}-make.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	autoconf
-#BuildConflicts:	kernel-headers < 2.3.0
+BuildConflicts:	kernel-headers < 2.3.0
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
 
