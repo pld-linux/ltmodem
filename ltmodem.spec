@@ -16,6 +16,7 @@ BuildRequires:	autoconf
 Prereq:		modutils >= 2.4.6-3
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
+BuildConflicts:	kernel-headers < 2.4.0
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
 
