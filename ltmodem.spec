@@ -82,7 +82,7 @@ tar xzf source.tar.gz
 
 %build
 cd source
-autoconf
+%{__autoconf}
 
 CFLAGS="%{rpmcflags} -I%{_kernelsrcdir}/include"
 %configure \
