@@ -1,11 +1,13 @@
-%define			_kernel_ver %(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		_kernel_ver %(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		smpstr	%{?_with_smp:smp}%{!?_with_smp:up}
+%define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
 Version:	5.99b
-Release:	2@%{_kernel_ver}
+Release:	2@%{_kernel_ver}%{smpstr}
 License:	GPL
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
@@ -20,6 +22,7 @@ Prereq:		modutils >= 2.4.6-3
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
+Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
 BuildConflicts:	kernel-headers < 2.4.0
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
@@ -44,6 +47,9 @@ tar xzf source.tar.gz
 %build
 cd source
 autoconf
+%if %{smp}
+CFLAGS="%{rpmcflags} -D__KERNEL_SMP=1"
+%endif
 %configure \
 	--with-force=yes \
 	--with-kernel=/usr/src/linux
@@ -51,8 +57,8 @@ autoconf
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-install -D source/lt_*.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/
+install -dD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+install -m644 source/lt_*.o $RPM_BUILD_ROOT/lib/modules/*/misc
 
 gzip -9nf 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 
