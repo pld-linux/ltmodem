@@ -3,7 +3,7 @@
 %define		smpstr	%{?_with_smp:-smp}
 %define		smp	%{?_with_smp:1}%{!?_with_smp:0}
 
-%define 	inner_ver 6.00b14
+%define 	inner_ver 6.00c2
 
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
@@ -80,6 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 install -dD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 cp -f source/lt_*.o $RPM_BUILD_ROOT/lib/modules/*/misc
 
+rm -rf DOCs/Installers
 gzip -9nf 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 
 %clean
