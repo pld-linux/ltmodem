@@ -3,7 +3,7 @@ Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
 Version:	5.99b
-Release:	1
+Release:	2
 License:	GPL
 Group:		Base/Kernel
 Group(de):	Grundsätzlich/Kern
