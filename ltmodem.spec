@@ -17,6 +17,7 @@ URL:		http://www.physcip.uni-stuttgart.de/heby/ltmodem/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	autoconf
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.3.0}
+BuildRequires:	rpmbuild(macros) >= 1.118
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
 
@@ -120,16 +121,16 @@ rm -rf DOCs/Installers
 rm -rf $RPM_BUILD_ROOT
 
 %post	-n kernel-char-ltmodem
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %postun	-n kernel-char-ltmodem
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post	-n kernel-smp-char-ltmodem
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %postun	-n kernel-smp-char-ltmodem
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %files -n kernel-char-ltmodem
 %defattr(644,root,root,755)
