@@ -57,7 +57,7 @@ CFLAGS="%{rpmcflags} -D__KERNEL_SMP=1"
 %install
 rm -rf $RPM_BUILD_ROOT
 install -dD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
-install -m644 source/lt_*.o $RPM_BUILD_ROOT/lib/modules/*/misc
+cp source/lt_*.o $RPM_BUILD_ROOT/lib/modules/*/misc
 
 gzip -9nf 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
 
