@@ -1,0 +1,39 @@
+diff -Nur ltmodem-5.78e.orig/Makefile ltmodem-5.78e/Makefile
+--- ltmodem-5.78e.orig/Makefile	Mon Feb 12 06:18:33 2001
++++ ltmodem-5.78e/Makefile	Sun Mar 18 14:39:39 2001
+@@ -19,25 +19,8 @@
+ 
+ SYSTEM = /usr/src/linux/
+ 
+-KCFLAGS = -D__KERNEL__ -I$(SYSTEM)include \
+-	-Wall -Wstrict-prototypes -O2 \
+-	-fomit-frame-pointer -fno-strict-aliasing -pipe \
+-	-fno-strength-reduce -m486 -malign-loops=2 \
+-	-malign-jumps=2 -malign-functions=2 -DCPU=586 \
+-	-DMODULE \
+-	-DLT_VERSION=$(LT_VERSION)
+-
+-KCFLAGS3 = $(KCFLAGS) \
+-	-DMODVERSIONS \
+-	-include $(SYSTEM)include/linux/modversions.h
+-
+-
+-#CC=gcc -D__KERNEL__ -DMODULE -w -O2 -fomit-frame-pointer 
+-#CC=gcc $(KCFLAGS2) -D__KERNEL__ -DMODULE -w -O2 -fomit-frame-pointer -I$(SYSTEM)include
+-CC = gcc $(KCFLAGS) $(KCFLAGS_EXTRA)
+-#CC = gcc $(KCFLAGS_EXTRA) $(KCFLAGS) 
++KCFLAGS = -D__KERNEL__ -DMODULE -DLT_VERSION=$(LT_VERSION) -malign-loops=2 -malign-functions=2
+ 
+-KVERSION := $(shell uname -r)
+ KMODE := $(findstring 2.4, $(KVERSION))
+ ifeq ($(KMODE),)
+ KMODE := $(findstring 2.2, $(KVERSION))
+@@ -103,7 +86,7 @@
+ 	./ltinst
+ 
+ %.a: %.c
+-	$(CC) -c -o $@ $<
++	$(CC) $(KCFLAGS) $(CFLAGS) -c -o $@ $<
+ 
+ 
+ clean::
