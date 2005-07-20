@@ -3,26 +3,30 @@
 %bcond_without	dist_kernel	# without kernel from distribution
 %bcond_without	smp		# build the SMP driver
 
+%define		maintaner	alk
+%define		origrel	7a
+%define		ver	2.6
+
 %define		_rel	1
 
 Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	8.31a9
+Version:	%{origrel}
 Release:	%{_rel}
 License:	unknown
 Group:		Base/Kernel
-Source0:	http://linmodems.technion.ac.il/packages/ltmodem/archive/source/%{name}-%{version}.tar.gz
-# NoSource0-md5:	bd0e54ddb2c7037b644b9c6cb6bce9ea
+Source0:	http://linmodems.technion.ac.il/packages/ltmodem/kernel-2.6/%{name}-%{ver}-%{maintaner}-%{origrel}.tar.gz
+# NoSource0-md5:	d787ab30c73e4e0f7c9485bfb8a1c26d
 NoSource:	0
 URL:		http://linmodems.technion.ac.il/Ltmodem.html
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-BuildRequires:	autoconf
-%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.3.0}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.0}
+BuildRequires:	%{kgcc_package}
 BuildRequires:	rpmbuild(macros) >= 1.118
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
@@ -43,7 +47,7 @@ Summary(pl):	Modu³ j±dra dla modemów Lucent
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
-Requires(post,postun):	modutils >= 2.4.6-3
+Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
 Obsoletes:	ltmodem
@@ -68,7 +72,7 @@ Summary(pl):	Modu³ j±dra dla modemów Lucent
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-Requires(post,postun):	modutils >= 2.4.6-3
+Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-9
 Conflicts:	ppp < 2.4.0
 Obsoletes:	ltmodem
@@ -87,39 +91,48 @@ ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
 Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 
 %prep
-%setup -q
-tar xzf source.tar.gz
+%setup -q -n %{name}-%{ver}-%{maintaner}-%{origrel}
 
 %build
-cd source
-%{__autoconf}
-
-CFLAGS="%{rpmcflags} -I%{_kernelsrcdir}/include"
-%configure \
-	--with-force=yes \
-	--with-kernel=%{_kernelsrcdir}
 for cfg in up %{?with_smp:smp}; do
+	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
+		exit 1
+	fi
 	rm -rf include
+	install -d modules
 	install -d include/{linux,config}
 	ln -sf %{_kernelsrcdir}/config-$cfg .config
+	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h include/linux/autoconf.h
 	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
 	touch include/config/MARKER
+	
+	%{__make} -C %{_kernelsrcdir} clean \
+		RCS_FIND_IGNORE="-name '*.ko' -o" \
+		M=$PWD O=$PWD
 	%{__make} -C %{_kernelsrcdir} modules \
 		CC="%{__cc}" CPP="%{__cpp}" \
 		M=$PWD O=$PWD V=1
-	mkdir $cfg
-	mv lt_*.o *.ko $cfg
+	for mod in *.ko; do
+		mod=$(echo "$mod" | sed -e 's#\.ko##g')
+		mv -v $mod.ko modules/$mod-$cfg.ko
+	done
 done
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -dD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
-install source/up/*.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
+cd modules
 %if %{with smp}
-install source/smp/*.ko $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
-%endif
+for mod in *smp.ko; do
+	nmod=$(echo "$mod" | sed -e 's#-smp##g')
+	install $mod $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc/$nmod
+done
+%endif 
 
-rm -rf DOCs/Installers
+for mod in *up.ko; do
+	nmod=$(echo "$mod" | sed -e 's#-up##g')
+	install $mod $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/$nmod
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -138,12 +151,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n kernel-char-ltmodem
 %defattr(644,root,root,755)
-%doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
+%doc docs/*
 /lib/modules/%{_kernel_ver}/*/*
 
 %if %{with smp}
 %files -n kernel-smp-char-ltmodem
 %defattr(644,root,root,755)
-%doc 1ST-READ DOCs/* source/{CHANGELOG,UPDATES-BUGS}
+%doc docs/*
 /lib/modules/%{_kernel_ver}smp/*/*
 %endif
