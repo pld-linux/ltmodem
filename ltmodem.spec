@@ -3,9 +3,9 @@
 %bcond_without	dist_kernel	# without kernel from distribution
 %bcond_without	smp		# build the SMP driver
 
-%define		maintaner	alk
+%define		_corever	8.31
+%define		maintainer	alk
 %define		origrel	7a
-%define		ver	2.6
 
 %define		_rel	1
 
@@ -13,14 +13,14 @@ Summary:	Kernel module for Lucent modems
 Summary(de):	Kernmodul für Lucent-Modems
 Summary(pl):	Modu³ j±dra dla modemów Lucent
 Name:		ltmodem
-Version:	%{origrel}
+Version:	%{_corever}.%{maintainer}.%{origrel}
 Release:	%{_rel}
 License:	unknown
 Group:		Base/Kernel
-Source0:	http://linmodems.technion.ac.il/packages/ltmodem/kernel-2.6/%{name}-%{ver}-%{maintaner}-%{origrel}.tar.gz
+Source0:	http://linmodems.technion.ac.il/packages/ltmodem/kernel-2.6/%{name}-2.6-%{maintainer}-%{origrel}.tar.gz
 # NoSource0-md5:	d787ab30c73e4e0f7c9485bfb8a1c26d
 NoSource:	0
-URL:		http://linmodems.technion.ac.il/Ltmodem.html
+URL:		http://linmodems.technion.ac.il/resources.html#lucent
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.0}
 BuildRequires:	%{kgcc_package}
 BuildRequires:	rpmbuild(macros) >= 1.118
@@ -91,7 +91,10 @@ ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
 Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 
 %prep
-%setup -q -n %{name}-%{ver}-%{maintaner}-%{origrel}
+%setup -q -n %{name}-2.6-%{maintainer}-%{origrel}
+
+# to make sure that the right version is used
+if [ \! -f ltmdmobj.o-%{_corever} ]; then exit 1; fi
 
 %build
 for cfg in up %{?with_smp:smp}; do
