@@ -21,8 +21,8 @@ Source0:	http://linmodems.technion.ac.il/packages/ltmodem/kernel-2.6/%{name}-2.6
 # NoSource0-md5:	d787ab30c73e4e0f7c9485bfb8a1c26d
 NoSource:	0
 URL:		http://linmodems.technion.ac.il/resources.html#lucent
-%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.0}
 BuildRequires:	%{kgcc_package}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.0}
 BuildRequires:	rpmbuild(macros) >= 1.118
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
@@ -49,9 +49,9 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-9
-Conflicts:	ppp < 2.4.0
-Obsoletes:	ltmodem
 Obsoletes:	kernel-net-ltmodem
+Obsoletes:	ltmodem
+Conflicts:	ppp < 2.4.0
 
 %description -n kernel-char-ltmodem
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
@@ -74,9 +74,9 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-9
-Conflicts:	ppp < 2.4.0
-Obsoletes:	ltmodem
 Obsoletes:	kernel-smp-net-ltmodem
+Obsoletes:	ltmodem
+Conflicts:	ppp < 2.4.0
 
 %description -n kernel-smp-char-ltmodem
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
@@ -109,7 +109,7 @@ for cfg in up %{?with_smp:smp}; do
 	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
 	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
 	touch include/config/MARKER
-	
+
 	%{__make} -C %{_kernelsrcdir} clean \
 		RCS_FIND_IGNORE="-name '*.ko' -o" \
 		M=$PWD O=$PWD
@@ -131,7 +131,7 @@ for mod in *smp.ko; do
 	nmod=$(echo "$mod" | sed -e 's#-smp##g')
 	install $mod $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc/$nmod
 done
-%endif 
+%endif
 
 for mod in *up.ko; do
 	nmod=$(echo "$mod" | sed -e 's#-up##g')
