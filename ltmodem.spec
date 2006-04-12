@@ -22,7 +22,7 @@ Source0:	http://linmodems.technion.ac.il/packages/ltmodem/kernel-2.6/%{name}-2.6
 NoSource:	0
 URL:		http://linmodems.technion.ac.il/resources.html#lucent
 BuildRequires:	%{kgcc_package}
-%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.0}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 3:2.6.0}
 BuildRequires:	rpmbuild(macros) >= 1.118
 ExclusiveArch:	%{ix86}
 ExclusiveOS:	Linux
