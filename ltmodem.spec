@@ -5,7 +5,7 @@
 
 %define		_corever	8.31
 %define		maintainer	alk
-%define		origrel	7a
+%define		origrel	8
 
 %define		_rel	1
 
@@ -17,8 +17,8 @@ Version:	%{_corever}.%{maintainer}.%{origrel}
 Release:	%{_rel}
 License:	unknown
 Group:		Base/Kernel
-Source0:	http://linmodems.technion.ac.il/packages/ltmodem/kernel-2.6/%{name}-2.6-%{maintainer}-%{origrel}.tar.gz
-# NoSource0-md5:	d787ab30c73e4e0f7c9485bfb8a1c26d
+Source0:	http://linmodems.technion.ac.il/packages/ltmodem/kernel-2.6/%{name}-2.6-%{maintainer}-%{origrel}.tar.bz2
+# NoSource0-md5:	0f7df8d31cf662a4afaa378fa5bf790b
 NoSource:	0
 URL:		http://linmodems.technion.ac.il/resources.html#lucent
 BuildRequires:	%{kgcc_package}
