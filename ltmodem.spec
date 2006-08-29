@@ -2,6 +2,7 @@
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel from distribution
 %bcond_without	smp		# build the SMP driver
+%bcond_with	verbose		# verbose build (V=1)
 
 %define		_corever	8.31
 %define		maintainer	alk
@@ -97,35 +98,41 @@ Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
 if [ \! -f ltmdmobj.o-%{_corever} ]; then exit 1; fi
 
 %build
-for cfg in up %{?with_smp:smp}; do
+for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
 	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
 		exit 1
 	fi
-	rm -rf include
-	install -d modules
-	install -d include/{linux,config}
-	ln -sf %{_kernelsrcdir}/config-$cfg .config
-	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h include/linux/autoconf.h
-	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
-	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
-	touch include/config/MARKER
-
+	rm -f *.o
+	install -d o/include/linux
+	ln -sf %{_kernelsrcdir}/config-$cfg o/.config
+	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
+	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h
+%if %{with dist_kernel}
+	%{__make} -C %{_kernelsrcdir} O=$PWD/o prepare scripts
+%else
+	install -d o/include/config
+	touch o/include/config/MARKER
+	ln -sf %{_kernelsrcdir}/scripts o/scripts
+%endif
 	%{__make} -C %{_kernelsrcdir} clean \
 		RCS_FIND_IGNORE="-name '*.ko' -o" \
-		M=$PWD O=$PWD
+		M=$PWD O=$PWD/o \
+		%{?with_verbose:V=1}
+	ln -s ltmdmobj.o-%{_corever} ltmdmobj.o
 	%{__make} -C %{_kernelsrcdir} modules \
 		CC="%{__cc}" CPP="%{__cpp}" \
-		M=$PWD O=$PWD V=1
-	for mod in *.ko; do
-		mod=$(echo "$mod" | sed -e 's#\.ko##g')
-		mv -v $mod.ko modules/$mod-$cfg.ko
+		M=$PWD O=$PWD/o \
+		%{?with_verbose:V=1}
+	for i in ltmodem ltserial; do
+		mv $i{,-$cfg}.ko
 	done
 done
 
+
 %install
 rm -rf $RPM_BUILD_ROOT
+
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
-cd modules
 %if %{with smp}
 for mod in *smp.ko; do
 	nmod=$(echo "$mod" | sed -e 's#-smp##g')
