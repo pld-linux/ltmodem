@@ -11,8 +11,8 @@
 %define		_rel	1
 
 Summary:	Kernel module for Lucent modems
-Summary(de):	Kernmodul für Lucent-Modems
-Summary(pl):	Modu³ j±dra dla modemów Lucent
+Summary(de.UTF-8):   Kernmodul fÃ¼r Lucent-Modems
+Summary(pl.UTF-8):   ModuÅ‚ jÄ…dra dla modemÃ³w Lucent
 Name:		ltmodem
 Version:	%{_corever}.%{maintainer}.%{origrel}
 Release:	%{_rel}
@@ -33,18 +33,18 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
 modems are made available as the /dev/ttyLT0 device.
 
-%description -l de
-ltmodem ist ein Kernmodul, der unterstützt Lucent-Chip-basierte
-Modems. Diese Modems werden als das /dev/ttyLT0-Gerät gewährt.
+%description -l de.UTF-8
+ltmodem ist ein Kernmodul, der unterstÃ¼tzt Lucent-Chip-basierte
+Modems. Diese Modems werden als das /dev/ttyLT0-GerÃ¤t gewÃ¤hrt.
 
-%description -l pl
-ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
-Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
+%description -l pl.UTF-8
+ltmodem jest moduÅ‚em jÄ…dra obsÅ‚ugujÄ…cym modemy oparte na ukÅ‚adach
+Lucent. Modemy te udostÄ™pniane sÄ… jako urzÄ…dzenie /dev/ttyLT0.
 
 %package -n kernel-char-ltmodem
 Summary:	Kernel module for Lucent modems
-Summary(de):	Kernmodul für Lucent-Modems
-Summary(pl):	Modu³ j±dra dla modemów Lucent
+Summary(de.UTF-8):   Kernmodul fÃ¼r Lucent-Modems
+Summary(pl.UTF-8):   ModuÅ‚ jÄ…dra dla modemÃ³w Lucent
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -58,18 +58,18 @@ Conflicts:	ppp < 2.4.0
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
 modems are made available as the /dev/ttyLT0 device.
 
-%description -n kernel-char-ltmodem -l de
-ltmodem ist ein Kernmodul, der unterstützt Lucent-Chip-basierte
-Modems. Diese Modems werden als das /dev/ttyLT0-Gerät gewährt.
+%description -n kernel-char-ltmodem -l de.UTF-8
+ltmodem ist ein Kernmodul, der unterstÃ¼tzt Lucent-Chip-basierte
+Modems. Diese Modems werden als das /dev/ttyLT0-GerÃ¤t gewÃ¤hrt.
 
-%description -n kernel-char-ltmodem -l pl
-ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
-Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
+%description -n kernel-char-ltmodem -l pl.UTF-8
+ltmodem jest moduÅ‚em jÄ…dra obsÅ‚ugujÄ…cym modemy oparte na ukÅ‚adach
+Lucent. Modemy te udostÄ™pniane sÄ… jako urzÄ…dzenie /dev/ttyLT0.
 
 %package -n kernel-smp-char-ltmodem
 Summary:	Kernel module for Lucent modems
-Summary(de):	Kernmodul für Lucent-Modems
-Summary(pl):	Modu³ j±dra dla modemów Lucent
+Summary(de.UTF-8):   Kernmodul fÃ¼r Lucent-Modems
+Summary(pl.UTF-8):   ModuÅ‚ jÄ…dra dla modemÃ³w Lucent
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
@@ -83,13 +83,13 @@ Conflicts:	ppp < 2.4.0
 ltmodem is a kernel module supporting Lucent-chip-based modems. These
 modems are made available as the /dev/ttyLT0 device.
 
-%description -n kernel-smp-char-ltmodem -l de
-ltmodem ist ein Kernmodul, der unterstützt Lucent-Chip-basierte
-Modems. Diese Modems werden als das /dev/ttyLT0-Gerät gewährt.
+%description -n kernel-smp-char-ltmodem -l de.UTF-8
+ltmodem ist ein Kernmodul, der unterstÃ¼tzt Lucent-Chip-basierte
+Modems. Diese Modems werden als das /dev/ttyLT0-GerÃ¤t gewÃ¤hrt.
 
-%description -n kernel-smp-char-ltmodem -l pl
-ltmodem jest modu³em j±dra obs³uguj±cym modemy oparte na uk³adach
-Lucent. Modemy te udostêpniane s± jako urz±dzenie /dev/ttyLT0.
+%description -n kernel-smp-char-ltmodem -l pl.UTF-8
+ltmodem jest moduÅ‚em jÄ…dra obsÅ‚ugujÄ…cym modemy oparte na ukÅ‚adach
+Lucent. Modemy te udostÄ™pniane sÄ… jako urzÄ…dzenie /dev/ttyLT0.
 
 %prep
 %setup -q -n %{name}-2.6-%{maintainer}-%{origrel}
