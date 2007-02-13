@@ -11,8 +11,8 @@
 %define		_rel	1
 
 Summary:	Kernel module for Lucent modems
-Summary(de.UTF-8):   Kernmodul für Lucent-Modems
-Summary(pl.UTF-8):   Moduł jądra dla modemów Lucent
+Summary(de.UTF-8):	Kernmodul für Lucent-Modems
+Summary(pl.UTF-8):	Moduł jądra dla modemów Lucent
 Name:		ltmodem
 Version:	%{_corever}.%{maintainer}.%{origrel}
 Release:	%{_rel}
@@ -43,8 +43,8 @@ Lucent. Modemy te udostępniane są jako urządzenie /dev/ttyLT0.
 
 %package -n kernel-char-ltmodem
 Summary:	Kernel module for Lucent modems
-Summary(de.UTF-8):   Kernmodul für Lucent-Modems
-Summary(pl.UTF-8):   Moduł jądra dla modemów Lucent
+Summary(de.UTF-8):	Kernmodul für Lucent-Modems
+Summary(pl.UTF-8):	Moduł jądra dla modemów Lucent
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -68,8 +68,8 @@ Lucent. Modemy te udostępniane są jako urządzenie /dev/ttyLT0.
 
 %package -n kernel-smp-char-ltmodem
 Summary:	Kernel module for Lucent modems
-Summary(de.UTF-8):   Kernmodul für Lucent-Modems
-Summary(pl.UTF-8):   Moduł jądra dla modemów Lucent
+Summary(de.UTF-8):	Kernmodul für Lucent-Modems
+Summary(pl.UTF-8):	Moduł jądra dla modemów Lucent
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
