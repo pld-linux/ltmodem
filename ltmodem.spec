@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel from distribution
+%bcond_without	up		# build the UP driver
 %bcond_without	smp		# build the SMP driver
 %bcond_with	verbose		# verbose build (V=1)
 
@@ -160,12 +161,14 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-n kernel-smp-char-ltmodem
 %depmod %{_kernel_ver}smp
 
+%if %{with up} || %{without dist_kernel}
 %files -n kernel-char-ltmodem
 %defattr(644,root,root,755)
 %doc docs/*
 /lib/modules/%{_kernel_ver}/*/*
+%endif
 
-%if %{with smp}
+%if %{with smp} && %{with dist_kernel}
 %files -n kernel-smp-char-ltmodem
 %defattr(644,root,root,755)
 %doc docs/*
